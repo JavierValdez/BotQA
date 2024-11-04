@@ -1,0 +1,333 @@
+<!DOCTYPE html><html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="description" content="Share a secure message. Free encrypted message sharing with custom destruction. It is all about privacy.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+    <title>Cloakmy.org -
+        Share a secure message.
+    </title>
+    <script type="text/javascript" src="https://cloakmy.org/comp/jquery/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="https://cloakmy.org/comp/jquery/jquery-ui.1.10.4.min.js"></script>      
+
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8X0RESQGE5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-8X0RESQGE5');
+    </script>
+    <script src="/comp/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script type="text/javascript" src="https://cloakmy.org/comp/qtip/jquery.qtip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cloakmy.org/comp/qtip/jquery.qtip.min.css">
+
+    <script type="text/javascript" src="https://cloakmy.org/comp/checkboxes/customInput.jquery.js"></script>    
+    <script type="text/javascript" src="https://cloakmy.org/comp/dtpicker/jquery-ui-timepicker-addon.min.js"></script>
+    <script src="https://cloakmy.org/comp/cryptojs/components/core-min.js"></script>
+    <script src="https://cloakmy.org/comp/cryptojs/rollups/aes.js"></script>
+    <script src="https://cloakmy.org/comp/cryptojs/components/enc-base64-min.js"></script>
+    <script src="https://cloakmy.org/comp/cryptojs/rollups/pbkdf2.js"></script>
+
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&amp;display=swap&amp;subset=cyrillic,greek" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="https://cloakmy.org/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="https://cloakmy.org/favicon-152.png">
+    <link rel="stylesheet" type="text/css" href="https://cloakmy.org/style.css?v=1.9.4">
+    <link rel="stylesheet" type="text/css" href="https://cloakmy.org/ui.css">
+    <link rel="stylesheet" type="text/css" href="https://cloakmy.org/comp/dtpicker/jquery-ui-timepicker-addon.min.css">
+    <script type="text/javascript" src="https://cloakmy.org/comp/scripts.js?v=1.9.4"></script>
+<script id="mce_0" type="text/javascript" src="https://cloakmy.org/comp/tinymce/themes/silver/theme.min.js"></script></head>
+
+<body>
+    <div class="wrapper">
+        <div id="header">
+            <a href="https://cloakmy.org"><img class="logo" src="https://cloakmy.org/images/cloakmy_logo.png" alt="Cloakmy.org"></a>
+            <h1 class="hide-mobile"><a href="https://cloakmy.org">Cloakmy</a></h1>
+            <ul>
+                <li><a href="https://cloakmy.org/c">Chat</a></li>
+                <li><a href="https://cloakmy.org/x">Stack</a>
+                </li>
+                <li><a href="https://cloakmy.org/encryptor">Encryptor</a>
+                </li>
+                <li><a href="https://cloakmy.org/imgcrypt">Imgcrypt</a>
+                </li>
+            </ul>
+        </div>
+                <div id="subheader">
+            <p>Please <a href="#donate">donate</a> if you would like to support the developer with server costs and maintenance time.<br>I want to keep this service free for everyone. Thanks!</p>
+        </div>
+                    <script type="text/javascript">
+        $(document).ready(function (e) {
+            if ($("#to").val().length > 0)
+                $("#subjectWrap").show('fast');
+
+            var handleFileSelect = function (evt) {
+                var files = evt.target.files;
+                var file = files[0];
+                if (files && file) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (readerEvt) {
+                        var binaryString = readerEvt.target.result;
+                        document.getElementById("message").value = btoa(binaryString);
+                    };
+                    reader.readAsBinaryString(file);
+                    var fullPath = document.getElementById('filePicker').value;
+                    if (fullPath) {
+                        var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+                        var filename = fullPath.substring(startIndex);
+                        if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+                            filename = filename.substring(1);
+                        }
+                        if (filename)
+                            $("#filename").val(filename);
+                    }
+                    $("#filePicker").val('');
+                }
+            };
+            /*if (window.File && window.FileReader && window.FileList && window.Blob) {
+             document.getElementById('filePicker').addEventListener('change', handleFileSelect, false);
+             } else {
+             alert('The File APIs are not fully supported in this browser.');
+             }*/
+            $(".dRadio").click(function (e) {
+                if ($(this).attr('id') == "expire") {
+                    $("#expirationDateWrap").show('fast');
+                } else
+                    $("#expirationDateWrap").hide('fast');
+                if ($(this).attr('id') == "noexpire" || $(this).attr('id') == "expire")
+                    $("#allowDeleteWrap").show('fast');
+                else
+                    $("#allowDeleteWrap").hide('fast');
+
+            });
+            $("#expirationDate, #validityDate").datetimepicker({
+                timeFormat: 'HH:mm z'
+            });
+
+            $("#to").keyup(function (e) {
+                if ($(this).val().length > 0)
+                    $("#subjectWrap").show('fast');
+                else
+                    $("#subjectWrap").hide('fast');
+
+            });
+            $(".moreinfo").click(function (e) {
+                $(this).parents().find(".moreinfodata").slideToggle('fast');
+            });
+
+
+            $("#homeform").submit(function (e) {
+                if ($("#jencryption").length > 0 && $("#jencryption").val() && tinyMCE) {
+                    $("#jencryption").prop('readonly', true);
+                    $("#message").prop('readonly', true);
+                    var message = tinyMCE.get('message').getContent();
+                    var password = $("#jencryption").val();
+                    var encrypted = CryptoJS.AES.encrypt(message, password, {format: JsonFormatter});
+                    tinyMCE.get('message').setContent(encrypted.toString());
+                    var encrypted_array = $.parseJSON(encrypted.toString());
+                    var key512Bits = CryptoJS.PBKDF2(password, encrypted_array.s, {keySize: 512 / 32, iterations: 20});
+                    var hashedPassword = CryptoJS.enc.Hex.stringify(key512Bits);
+                    $("#jencryption").val(hashedPassword);
+                }
+            });
+            $("#password").keyup(function (e) {
+                var pswd = $(this).val();
+                var score = 0;
+                var addclass = "";
+                var tooltip = "";
+                if ($(this).val().length > 0) {
+
+                    $("#hintWrap").show('fast');
+                    $("#secondarypasswordsection").show('fast');
+                } else {
+                    $("#hintWrap").hide('fast');
+                    $("#secondarypasswordsection").hide('fast');
+                    $("#jencryption").val('');
+                }
+                if (pswd.length > 0) {
+                    score = 0;
+                    if (pswd.length > 6)
+                        score += 3;
+                    if (pswd.match(/[A-z]/))
+                        score += 2;
+                    if (pswd.match(/[A-Z]/))
+                        score += 2;
+                    if (pswd.match(/\d/))
+                        score += 3;
+
+                    if (score < 5) {
+                        addclass = "NOTOK";
+                        tooltip = "Too weak, not recommended.";
+                    } else if (score < 8 && score >= 5) {
+                        addclass = "warning";
+                        tooltip = "Will do pretty much the job.";
+                    } else {
+                        addclass = "OK";
+                        tooltip = "Safe password. Attaboy !";
+                    }
+                }
+                $("#passwordLabel").removeClass("NOTOK warning OK");
+                $("#passwordLabel").attr("title", "Optional, to lock your file");
+                if (addclass.length > 0)
+                    $("#passwordLabel").addClass(addclass);
+                if (tooltip.length > 0)
+                    $("#passwordLabel").attr("title", tooltip);
+
+
+            });
+        });
+    </script>
+                <div class="center">
+            <h1 id="landing-title">Share a secret</h1>
+            <p class="center"><span id="showMoreInfo" class="clickButton">More info</span></p>
+        </div>
+        <div id="moreInfo" class="sendsecure box">
+        We provide a quick, convenient and <strong>secure</strong> way to share sensitive information. Just copy your
+        message in the box, set the recipient and your password (if you want to protect your message) and send it. The
+        recipient will receive a secure link. If you select <em>Auto Destruct</em> as an expiration setting (by 
+        default), once the link is opened the message will be deleted. Hover the labels with your mouse or click them
+        (on touchscreens) for more info. The message will be encrypted with a randomly generated key + your password if
+        you chose one.
+        <p><strong>We log IP addresses, be smart, don't use our service illegally. If you use the email service, your IP address
+                will be sent to the email recipient(s) as well as a link to the secure message.</strong></p>    
+    </div>
+    <div id="homeform" class="sendsecure box">
+        <form name="sendsecure" action="https://cloakmy.org" method="post" id="secureForm">
+
+                <div class="section">
+                    <label for="to" class="tip" data-hasqtip="0" oldtitle="Optional. Only receives a notification, not the actual message. Maximum 5 persons." title="">To (optional)</label>
+                    <input type="email" name="to" id="to" value="">
+                </div>
+                <div class="section" id="subjectWrap">
+                    <label for="subject">Subject (optional)</label>
+                    <input type="text" name="subject" id="subject" value="">
+                </div>
+                <div class="section">
+                    <label for="password" id="passwordLabel" class="tip" data-hasqtip="1" oldtitle="Recommended to share sensitive information, will lock your file" title="">Password
+                        (optional)</label>
+                    <input type="password" name="password" id="password">
+                </div>
+
+                <div id="secondarypasswordsection" class="section">
+                    <label for="jencryption" id="jencryptionLavel" class="tip float-left" data-hasqtip="2" oldtitle="Optional. Will pre-encrypt locally your message before sending it" title="">Secondary Password
+                        (optional)</label><span class="moreinfo">?</span>
+                    <input type="password" name="jencryption" id="jencryption" value="">
+
+                    <div class="moreinfodata">
+                        <p>Do not repeat the main password. This is optional and for super sensitive data only. Type in
+                            a
+                            secondary password in this input and the content will be encrypted locally in JavaScript
+                            before
+                            being sent through the wire and being encrypted in our servers. It is <strong>strongly
+                                recommended to use a different password</strong> from the main password. You must also
+                            give
+                            both passwords to the recipient.</p>
+                    </div>
+                </div>
+
+                <div class="section" id="hintWrap">
+                    <label for="hint">Hint (optional)</label>
+                    <input type="text" name="hint" id="hint">
+                </div>
+                <div class="section">
+                    <textarea name="text" id="message" cols="50" rows="10" style="visibility: hidden;"></textarea>
+                </div>
+                <div class="section" style="display:none;">
+                    <label for="filePicker">Choose or drag a file:</label>
+                    <input type="file" class="float-right" id="filePicker">
+                    <input type="hidden" name="filename" id="filename">
+                </div>
+                <div class="section">
+                    <div style="float:left; width:100px;padding:5px 0">
+                        <span class="tip" data-hasqtip="3" oldtitle="Select the way you want to destroy your message." title="">Expiration</span>
+                    </div>
+                    <div class="expiration_box">
+     <span class="tip" data-hasqtip="4" oldtitle="The message will be displayed once, then deleted forever." title="">
+      <div class="custom-radio"><input name="vitality" type="radio" value="autodestruct" class="ck dRadio" id="autodestruct" checked=""><label for="autodestruct" class="checker checked">Auto Destruct</label></div>
+      <label for="autodestruct" style="display: none;">Auto Destruct</label>
+      </span>
+                        <span class="tip" data-hasqtip="5" oldtitle="Set the start and/or end date for your message." title="">
+      <div class="custom-radio"><input name="vitality" type="radio" value="expire" class="ck dRadio" id="expire"><label for="expire" class="checker">Timed</label></div>
+      <label for="expire" style="display: none;">Timed</label>
+      </span>
+                        <span class="tip" data-hasqtip="6" oldtitle="Manually delete the message." title="">    
+      <div class="custom-radio"><input name="vitality" type="radio" value="noexpire" class="ck dRadio" id="noexpire"><label for="noexpire" class="checker">Never Expire</label></div>
+      <label for="noexpire" style="display: none;">Never Expire</label>
+      </span>
+                    </div>
+                </div>
+                <div id="expirationDateWrap" style="overflow:hidden">
+                    <div class="section" style="float:left;width:48%;">
+                        <label for="validityDate" class="tip" data-hasqtip="7" oldtitle="Optional. If you want the message not to be readable before a certain date. Time reference is PDT (UTC - 7). The time on server is 2024-11-04 15:46" title="">Start
+                            Date</label>
+                        <input type="text" id="validityDate" name="validityDate" class="hasDatepicker">
+                    </div>
+                    <div class="section" style="float:right;width:48%;">
+                        <label for="expirationDate" class="tip" data-hasqtip="8" oldtitle="After this date, the message will be destroyed. Time reference is PDT (UTC - 7)." title="">End
+                            Date</label>
+                        <input type="text" id="expirationDate" name="expirationDate" class="hasDatepicker">     
+                    </div>
+                </div>
+                <div id="allowDeleteWrap" style="display:none;">
+                    <div class="section last" style="float:right">
+     <span class="tip" data-hasqtip="9" oldtitle="Allow receipients to delete message. You will always be able to delete the message with the link provided." title="">
+        <label for="allowDelete" style="display: none;">Allow Delete</label>
+        <div class="custom-checkbox"><input type="checkbox" class="ck" id="allowDelete" name="allowDelete" checked="checked" value="1"><label for="allowDelete" class="checker checked">Allow Delete</label></div>
+        </span>
+                    </div>
+                </div>
+                <div class="section last"><span id="submit" class="clickButton">Send Message</span></div>       
+                <input type="hidden" name="sKey" value="8x9lgey1rs38muzv0l2gbpzwtzpwq5vi">
+        </form>
+    </div>
+<div class="footertext">
+    <p>If you find a bug, a vulnerability or have a suggestion, please <a href="mailto:yassine@webmy.me">contact
+            me</a>.</p>
+    <div id="minifooterinfo">
+
+            <p title="Just in case you need a random 256 bits key">Randomly Generated Key:
+                <strong>
+                    JC8J2VuT2s5B3m8CEjd0EcYgZAqNwB2d                </strong>
+            </p>
+            <p>TLS Fingerprint (SHA 256):
+                be1034b147876300e643fa95090f05500715fe1e35603dede5347e501b15994d            </p>
+    </div>
+    <div id="donate">
+        <h3>Donation Links</h3>
+        <p>Etherium: <strong>0x35F3365348a98FaaEebc958a0F33799dAF0911e7</strong></p>
+        <p>Bitcoin: <strong>3M5Pqm9bhBdEscuxRiNAfWY2CNdgmuwpV7</strong></p>
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <input type="hidden" name="cmd" value="_donations">
+            <input type="hidden" name="business" value="UZWVTP6PJ22XW">
+            <input type="hidden" name="currency_code" value="USD">
+            <button class="cm-btn" type="submit">Donate with Paypal</button>
+        </form>
+    </div>
+</div>
+<div id="footer">
+    <div class="clearfix">
+        <ul>
+            <li><a href="https://cloakmy.org" class="active">Home</a></li>
+            <li><a href="https://cloakmy.org/c" class="">Chat</a></li>
+            <li><a href="https://cloakmy.org/x" class="">Stack</a></li>
+            <li><a href="https://cloakmy.org/encryptor" class="">Encryptor</a>
+            </li>
+            <li><a href="https://cloakmy.org/imgcrypt" class="">Imgcrypt</a>
+            </li>
+            <li><a href="https://cloakmy.org/privacy" class="">Privacy</a></li>
+        </ul>
+        <p id="copyright" class="wmm_link_wrap"><a class="wmm_link" href="http://webmy.me" target="_blank" data-wm-signature="5068e70f0be10">Baked with love in California
+                <img src="/images/favicon.png" alt="webmy.me" title="Webmy.me"></a></p>
+    </div>
+    <div id="version-info" class="clearfix">
+        Version:
+        1.9.4 - Last Update:
+        2023-11-14        <span>Your IP: <strong>
+                190.56.32.107            </strong></span>
+    </div>
+</div>    </div>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'8dd5bd350b468dd9',t:'MTczMDczNTIxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;"></iframe>
+
+<div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div></body></html>
